@@ -196,7 +196,7 @@
         <div class="template-header-left">
           <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
           <input type="checkbox" />
-          <span class="label-text">新規テンプレ</span>
+          <span class="label-text"></span>
         </div>
         <div class="template-header-right">
           <button class="edit-label" onclick="editLabel(this)">🖊️</button>
@@ -235,16 +235,16 @@
     }, { once: true });
   }
 
-  // === 本文編集（インライン） ===
+  // === 本文編集（即保存＆通知） ===
   function editTemplate(btn) {
-    const textarea = btn.closest('.template-item').querySelector('.template-body');
-    textarea.removeAttribute('readonly');
-    textarea.focus();
-    textarea.addEventListener('blur', () => {
-      textarea.setAttribute('readonly', true);
-      autoResize(textarea);
-      saveStorage();
-    }, { once: true });
+    saveStorage();
+    const notice = document.getElementById('copy-notice');
+    notice.textContent = '保存しました';
+    notice.style.display = 'block';
+    setTimeout(() => {
+      notice.style.display = 'none';
+      notice.textContent = 'コピーしました';
+    }, 500); // 表示時間0.5秒
   }
 
   function deleteTemplate(btn) {
@@ -259,7 +259,7 @@
 
       const notice = document.getElementById('copy-notice');
       notice.style.display = 'block';
-      setTimeout(() => { notice.style.display = 'none'; }, 1000);
+      setTimeout(() => { notice.style.display = 'none'; }, 500);
     });
   }
 
@@ -281,6 +281,7 @@
       .then(() => alert('✅ ページ全体のHTMLをコピーしました！'))
       .catch(() => alert('⚠️ コピーに失敗しました。ブラウザの設定を確認してください。'));
   }
+
 
   function autoResize(textarea) {
     textarea.style.height = 'auto';
@@ -324,6 +325,6 @@
     }
   };
 </script>
-
 </body>
 </html>
+  
