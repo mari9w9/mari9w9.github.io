@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+
+<title>Reina Templates</title>
+<style>
 /* モバイル対応：画面幅が600px以下のとき */
 @media (max-width: 600px) {
   body {
@@ -10,6 +17,7 @@
   }
 
   .top-controls {
+    display: flex;
     flex-direction: column;
     align-items: center;
   }
@@ -28,6 +36,7 @@
 
   .template-header,
   .template-body-row {
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -58,3 +67,145 @@
     margin-top: 6px;
   }
 }
+
+#copy-notice {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffcccc;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    display: none;
+    z-index: 9999;
+}
+</style>
+</head>
+<body>
+
+<h2>💗Reina💗</h2>
+
+<div class="top-controls">
+    <button onclick="setAll(true)">✅セット</button>
+    <button onclick="setAll(false)">✅リセット</button>
+    <button onclick="saveStorage()">ストレージへ保存</button>
+    <button onclick="addTemplate()">テンプレ追加</button>
+</div>
+
+<div id="templates">
+    <div class="template-item">
+        <div class="template-header">
+            <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
+            <input type="checkbox">
+            <span class="label-text">テンプレ:1</span>
+            <button class="edit-label" onclick="editLabel(this)">🖊️</button>
+        </div>
+        <div class="template-body-row">
+            <div class="template-body">Reina様、今日の空気や光を感じてください。</div>
+            <button onclick="editTemplate(this)">✏️</button>
+            <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
+        </div>
+    </div>
+</div>
+
+<div id="copy-notice">コピーしました</div>
+
+<script>
+function setAll(value) {
+    document.querySelectorAll('#templates input[type=checkbox]').forEach(cb => cb.checked = value);
+}
+
+function addTemplate() {
+    const container = document.getElementById('templates');
+    const newItem = document.createElement('div');
+    newItem.className = 'template-item';
+    newItem.innerHTML = `
+        <div class="template-header">
+            <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
+            <input type="checkbox">
+            <span class="label-text"></span>
+            <button class="edit-label" onclick="editLabel(this)">🖊️</button>
+        </div>
+        <div class="template-body-row">
+            <div class="template-body"></div>
+            <button onclick="editTemplate(this)">✏️</button>
+            <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
+        </div>
+    `;
+    container.appendChild(newItem);
+}
+
+function editLabel(btn) {
+    const label = btn.parentElement.querySelector('.label-text');
+    const newLabel = prompt("ラベルを編集", label.textContent);
+    if (newLabel !== null) label.textContent = newLabel;
+}
+
+function editTemplate(btn) {
+    const body = btn.parentElement.querySelector('.template-body');
+    const newBody = prompt("テンプレ本文を編集", body.textContent);
+    if (newBody !== null) body.textContent = newBody;
+}
+
+function deleteTemplate(btn) {
+    if (confirm("このテンプレを削除しますか？")) {
+        btn.closest('.template-item').remove();
+    }
+}
+
+function copyTemplate(btn) {
+    const text = btn.parentElement.querySelector('.template-body').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const cb = btn.closest('.template-item').querySelector('input[type=checkbox]');
+        if (cb) cb.checked = true;
+
+        const notice = document.getElementById('copy-notice');
+        notice.style.display = 'block';
+        setTimeout(() => {
+            notice.style.display = 'none';
+        }, 1000);
+    });
+}
+
+function saveStorage() {
+    const items = [];
+    document.querySelectorAll('.template-item').forEach(item => {
+        items.push({
+            label: item.querySelector('.label-text').textContent,
+            body: item.querySelector('.template-body').textContent,
+            checked: item.querySelector('input[type=checkbox]').checked
+        });
+    });
+    localStorage.setItem('templates', JSON.stringify(items));
+}
+
+window.onload = () => {
+    const data = JSON.parse(localStorage.getItem('templates') || '[]');
+    if (data.length > 0) {
+        document.getElementById('templates').innerHTML = '';
+        data.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'template-item';
+            div.innerHTML = `
+                <div class="template-header">
+                    <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
+                    <input type="checkbox" ${item.checked ? 'checked' : ''}>
+                    <span class="label-text">${item.label}</span>
+                    <button class="edit-label" onclick="editLabel(this)">🖊️</button>
+                </div>
+                <div class="template-body-row">
+                    <div class="template-body">${item.body}</div>
+                    <button onclick="editTemplate(this)">✏️</button>
+                    <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
+                </div>
+            `;
+            document.getElementById('templates').appendChild(div);
+        });
+    }
+};
+</script>
+
+</body>
+</html>
