@@ -3,71 +3,101 @@
 <head>
 <meta charset="UTF-8">
 
+<!-- ✅ ビューポート設定を追加 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Reina Templates</title>
 <style>
-/* モバイル対応：画面幅が600px以下のとき */
-@media (max-width: 600px) {
-  body {
-    font-size: 18px;
-    padding: 10px;
-  }
+/* ベースの設定 */
+body {
+    font-family: sans-serif;
+    background-color: #fff0f0;
+    padding: 20px;
+    text-align: center;
+    font-size: 18px; /* ✅ スマホ向けに少し大きく */
+}
 
-  h2 {
-    font-size: 22px;
-  }
+/* 見出し */
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
 
-  .top-controls {
+/* 上部ボタン群 */
+.top-controls {
+    margin-bottom: 20px;
+}
+.top-controls button {
+    margin: 5px;
+    padding: 10px 16px; /* ✅ タップしやすいサイズ */
+    font-size: 16px;
+}
+
+/* テンプレートリスト */
+#templates {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  .top-controls button {
-    width: 100%;
-    max-width: 300px;
-    margin: 6px auto;
-    font-size: 16px;
-  }
-
-  .template-item {
-    width: 100%;
-    margin-bottom: 16px;
-  }
-
-  .template-header,
-  .template-body-row {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .template-header button.edit-label,
-  .template-body-row button {
-    align-self: flex-end;
-    margin-top: 6px;
-  }
-
-  .template-body {
-    width: 100%;
-    margin-bottom: 6px;
-    font-size: 16px;
-  }
-
-  .label-text {
-    font-size: 16px;
-    padding: 4px 8px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    background-color: #fff;
-    margin-bottom: 6px;
-  }
-
-  .copy-template {
-    align-self: flex-end;
-    margin-top: 6px;
-  }
 }
 
+/* 各テンプレート項目 */
+.template-item {
+    width: 95%; /* ✅ スマホで画面にフィットしやすく */
+    max-width: 800px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* テンプレートヘッダー */
+.template-header {
+    background-color: #ffe4e1;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    flex-wrap: wrap; /* ✅ スマホで折り返し可能に */
+}
+.template-header button.delete-template {
+    margin-right: 8px;
+}
+.template-header input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.5); /* ✅ チェックボックスを大きく */
+}
+.template-header .label-text {
+    margin-right: 8px;
+    white-space: nowrap;
+    font-size: 16px;
+}
+.template-header button.edit-label {
+    margin-left: auto;
+}
+
+/* 本文と操作ボタン */
+.template-body-row {
+    background-color: #fff5f5;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    flex-wrap: wrap;
+}
+.template-body {
+    flex-grow: 1;
+    text-align: left;
+    margin-right: 10px;
+    font-size: 16px;
+}
+.template-body-row button {
+    margin: 4px;
+    padding: 6px 12px;
+    font-size: 14px;
+}
+.copy-template {
+    margin-left: auto;
+}
+
+/* コピー通知 */
 #copy-notice {
     position: fixed;
     bottom: 20px;
@@ -75,7 +105,7 @@
     transform: translateX(-50%);
     background-color: #ffcccc;
     color: #333;
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 5px;
     font-size: 14px;
     display: none;
