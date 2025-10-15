@@ -3,6 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+  const appVersion = "v1.03";  // ← ここだけ変えればOK
+
+  window.onload = () => {
+    // ページタイトルに反映
+    document.title = "Reina Templates " + appVersion;
+    // ボタン横ラベルに反映
+    const versionLabel = document.getElementById("version-label");
+    if (versionLabel) versionLabel.textContent = appVersion;
+  };
+</script>
+<!-- 既存のCSSや他のスクリプトはここから -->
 <title>Reina Templates v1.0</title>
 <style>
   body {
@@ -161,7 +173,7 @@
 
 <div id="header-container">
   <button id="reina-title">💗Reina💗</button>
-  <span id="version-label">v1.02</span>
+  <span id="version-label">v1.0</span>
 </div>
 
 <div id="templates">
