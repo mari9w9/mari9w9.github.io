@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reina Templates</title>
 <style>
 body {
@@ -11,7 +11,7 @@ body {
     padding: 20px;
     text-align: center;
     font-size: 18px;
-    padding-bottom: 100px; /* フッターボタンの高さ分余白確保 */
+    padding-bottom: 100px; /* 下部固定ボタンの分 */
 }
 
 h2 {
@@ -34,7 +34,7 @@ h2 {
     overflow: hidden;
 }
 
-/* ヘッダー全体を左右分割 */
+/* テンプレートヘッダー */
 .template-header {
     background-color: #ffe4e1;
     display: flex;
@@ -54,7 +54,6 @@ h2 {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: auto;
 }
 
 .template-header input[type="checkbox"] {
@@ -66,12 +65,11 @@ h2 {
     white-space: nowrap;
 }
 
-/* テンプレート本文 */
+/* 本文と操作 */
 .template-body-row {
     background-color: #fff5f5;
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     padding: 10px;
     gap: 10px;
 }
@@ -79,25 +77,19 @@ h2 {
 .template-body {
     font-size: 16px;
     width: 100%;
-    min-height: 20px;
-    resize: vertical;
+    resize: none;
     padding: 8px;
     overflow: hidden;
-    box-sizing: border-box;
+    line-height: 1.4;
+    min-height: 1em;
+    flex-grow: 1;
 }
 
-/* ボタン */
-.template-body-row button {
+/* コピー ボタン */
+.copy-template {
+    white-space: nowrap;
     padding: 8px 12px;
     font-size: 14px;
-    margin: 0 4px;
-}
-
-/* コピーと編集ボタン右寄せ */
-.button-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
 }
 
 /* コピー通知 */
@@ -144,26 +136,24 @@ h2 {
         <div class="template-header">
             <div class="template-header-left">
                 <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-                <input type="checkbox" />
+                <input type="checkbox">
                 <span class="label-text">テンプレ:1</span>
             </div>
             <div class="template-header-right">
                 <button class="edit-label" onclick="editLabel(this)">🖊️</button>
+                <button onclick="editTemplate(this)">✏️</button>
             </div>
         </div>
         <div class="template-body-row">
             <textarea class="template-body" oninput="autoResize(this)">Reina様、今日の空気や光を感じてください。</textarea>
-            <div class="button-group">
-                <button onclick="editTemplate(this)">✏️</button>
-                <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
-            </div>
+            <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
         </div>
     </div>
 </div>
 
 <div id="copy-notice">コピーしました</div>
 
-<!-- 下部固定ボタン -->
+<!-- ✅ 下部固定ボタン -->
 <div class="fixed-controls">
     <button onclick="setAll(true)">✅セット</button>
     <button onclick="setAll(false)">✅リセット</button>
@@ -172,12 +162,6 @@ h2 {
 </div>
 
 <script>
-// テキストエリアの高さを内容に合わせて調整する関数
-function autoResize(textarea) {
-    textarea.style.height = 'auto'; // 一旦リセット
-    textarea.style.height = (textarea.scrollHeight) + 'px'; // スクロール分を高さに反映
-}
-
 function setAll(value) {
     document.querySelectorAll('#templates input[type=checkbox]').forEach(cb => cb.checked = value);
 }
@@ -190,25 +174,20 @@ function addTemplate() {
         <div class="template-header">
             <div class="template-header-left">
                 <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-                <input type="checkbox" />
-                <span class="label-text"></span>
+                <input type="checkbox">
+                <span class="label-text">テンプレ</span>
             </div>
             <div class="template-header-right">
                 <button class="edit-label" onclick="editLabel(this)">🖊️</button>
+                <button onclick="editTemplate(this)">✏️</button>
             </div>
         </div>
         <div class="template-body-row">
             <textarea class="template-body" oninput="autoResize(this)"></textarea>
-            <div class="button-group">
-                <button onclick="editTemplate(this)">✏️</button>
-                <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
-            </div>
+            <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
         </div>
     `;
     container.appendChild(newItem);
-    // 新規追加のtextareaも高さ調整しておく
-    const textarea = newItem.querySelector('textarea');
-    autoResize(textarea);
 }
 
 function editLabel(btn) {
@@ -218,11 +197,11 @@ function editLabel(btn) {
 }
 
 function editTemplate(btn) {
-    const textarea = btn.closest('.template-body-row').querySelector('.template-body');
-    const newBody = prompt("テンプレ本文を編集", textarea.value);
-    if (newBody !== null) {
-        textarea.value = newBody;
-        autoResize(textarea); // 編集後に高さ調整
+    const textarea = btn.closest('.template-item').querySelector('.template-body');
+    const newText = prompt("テンプレ本文を編集", textarea.value);
+    if (newText !== null) {
+        textarea.value = newText;
+        autoResize(textarea);
     }
 }
 
@@ -258,11 +237,15 @@ function saveStorage() {
     localStorage.setItem('templates', JSON.stringify(items));
 }
 
+function autoResize(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+}
+
 window.onload = () => {
     const data = JSON.parse(localStorage.getItem('templates') || '[]');
     if (data.length > 0) {
-        const container = document.getElementById('templates');
-        container.innerHTML = '';
+        document.getElementById('templates').innerHTML = '';
         data.forEach(item => {
             const div = document.createElement('div');
             div.className = 'template-item';
@@ -270,25 +253,21 @@ window.onload = () => {
                 <div class="template-header">
                     <div class="template-header-left">
                         <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-                        <input type="checkbox" ${item.checked ? 'checked' : ''} />
+                        <input type="checkbox" ${item.checked ? 'checked' : ''}>
                         <span class="label-text">${item.label}</span>
                     </div>
                     <div class="template-header-right">
                         <button class="edit-label" onclick="editLabel(this)">🖊️</button>
+                        <button onclick="editTemplate(this)">✏️</button>
                     </div>
                 </div>
                 <div class="template-body-row">
                     <textarea class="template-body" oninput="autoResize(this)">${item.body}</textarea>
-                    <div class="button-group">
-                        <button onclick="editTemplate(this)">✏️</button>
-                        <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
-                    </div>
+                    <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
                 </div>
             `;
-            container.appendChild(div);
-            // 各textareaの高さ調整
-            const textarea = div.querySelector('textarea');
-            autoResize(textarea);
+            document.getElementById('templates').appendChild(div);
+            autoResize(div.querySelector('.template-body'));
         });
     }
 };
