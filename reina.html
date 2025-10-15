@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Reina Templates</title>
 <style>
   body {
@@ -75,47 +75,43 @@
     gap: 0px;
   }
 
-textarea.template-body {
-  font-size: 16px;
-  line-height: 1.2;                  /* 少しだけ詰める */
-  padding: 2px 4px;                  /* 上下左右パディング縮小 */
-  min-height: calc(1.2em + 4px);     /* 行高 + 上下padding */
-  max-height: 300px;
-  resize: none;
-  overflow-y: hidden;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-family: inherit;
-  box-sizing: border-box;
-  width: 100%;
-  margin: 0;
-}
+  textarea.template-body {
+    font-size: 16px;
+    line-height: 1.2;
+    padding: 2px 4px;
+    min-height: calc(1.2em + 4px);
+    max-height: 300px;
+    resize: none;
+    overflow-y: hidden;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+  }
 
-  /* ボタン */
-.button-group {
-  display: flex;
-  gap: 8;
-  min-width: 0px;
-  align-items: center;
-}
+  .button-group {
+    display: flex;
+    gap: 8px;
+    min-width: 0px;
+    align-items: center;
+  }
 
-.button-group button:not(.copy-template) {
-  margin-right: 6px;  /* コピー以外のボタンの右側にだけ隙間 */
-}
+  .button-group button:not(.copy-template) {
+    margin-right: 6px;
+  }
 
-.button-group .copy-template {
-  margin-left: auto;      /* コピーだけ右寄せ */
-  padding: 4px 6px;
-  font-size: 14px;
-  width: auto;
-}
-
-
+  .button-group .copy-template {
+    margin-left: auto;
+    padding: 4px 6px;
+    font-size: 14px;
+    width: auto;
+  }
 
   .fixed-controls .add-btn {
     margin-left: 30px; /* テンプレ追加ボタンの左に余白 */
   }
-  /* コピー通知 */
   #copy-notice {
     position: fixed;
     bottom: 90px;
@@ -130,7 +126,6 @@ textarea.template-body {
     z-index: 9999;
   }
 
-  /* 下部固定の操作ボタン */
   .fixed-controls {
     position: fixed;
     bottom: 0;
@@ -144,6 +139,7 @@ textarea.template-body {
     gap: 4px;
     z-index: 1000;
   }
+
   .fixed-controls button {
     padding: 4px 6px;
     font-size: 12px;
@@ -181,7 +177,7 @@ textarea.template-body {
 
 <div class="fixed-controls">
   <button onclick="saveStorage()">💾アップロード</button>
-  <button onclick="setAll(true)">✅セット</button>
+  <button onclick="copyAll()">📄コピー</button>
   <button onclick="setAll(false)">✅リセット</button>
   <button onclick="addTemplate()" class="add-btn">テンプレ追加</button>
 </div>
@@ -262,13 +258,20 @@ textarea.template-body {
       });
     });
     localStorage.setItem('templates', JSON.stringify(items));
+    alert("ローカルストレージに保存しました。");
+  }
+
+  function copyAll() {
+    const fullHtml = document.documentElement.outerHTML;
+    navigator.clipboard.writeText(fullHtml)
+      .then(() => alert('✅ ページ全体のHTMLをコピーしました！\nGitHubで上書きして保存できます。'))
+      .catch(() => alert('⚠️ コピーに失敗しました。ブラウザの設定を確認してください。'));
   }
 
   function autoResize(textarea) {
     textarea.style.height = 'auto';
     textarea.style.height = textarea.scrollHeight + 'px';
-    // 最小高さ設定 (1行分にするため)
-    const minHeight = parseFloat(getComputedStyle(textarea).lineHeight) + 10; // padding上下の合計10px
+    const minHeight = parseFloat(getComputedStyle(textarea).lineHeight) + 10;
     if (textarea.scrollHeight < minHeight) {
       textarea.style.height = minHeight + 'px';
     }
@@ -302,12 +305,9 @@ textarea.template-body {
           </div>
         `;
         container.appendChild(div);
-
-        // 自動高さ調整呼び出し
         autoResize(div.querySelector('textarea.template-body'));
       });
     } else {
-      // 初期表示のtextareaも高さ調整
       document.querySelectorAll('textarea.template-body').forEach(autoResize);
     }
   };
