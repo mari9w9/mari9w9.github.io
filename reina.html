@@ -80,9 +80,9 @@ h2 {
     font-size: 16px;
     width: 100%;
     min-height: 60px;
-    resize: none; /* 手動リサイズ禁止 */
+    resize: vertical;
     padding: 8px;
-    overflow-y: hidden; /* 自動で高さ調整するのでスクロールバーを消す */
+    overflow: hidden;
     box-sizing: border-box;
 }
 
@@ -152,7 +152,7 @@ h2 {
             </div>
         </div>
         <div class="template-body-row">
-            <textarea class="template-body" oninput="autoResizeTextarea(this)">Reina様、今日の空気や光を感じてください。</textarea>
+            <textarea class="template-body" oninput="autoResize(this)">Reina様、今日の空気や光を感じてください。</textarea>
             <div class="button-group">
                 <button onclick="editTemplate(this)">✏️</button>
                 <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
@@ -163,6 +163,7 @@ h2 {
 
 <div id="copy-notice">コピーしました</div>
 
+<!-- 下部固定ボタン -->
 <div class="fixed-controls">
     <button onclick="setAll(true)">✅セット</button>
     <button onclick="setAll(false)">✅リセット</button>
@@ -171,6 +172,12 @@ h2 {
 </div>
 
 <script>
+// テキストエリアの高さを内容に合わせて調整する関数
+function autoResize(textarea) {
+    textarea.style.height = 'auto'; // 一旦リセット
+    textarea.style.height = (textarea.scrollHeight) + 'px'; // スクロール分を高さに反映
+}
+
 function setAll(value) {
     document.querySelectorAll('#templates input[type=checkbox]').forEach(cb => cb.checked = value);
 }
@@ -191,7 +198,7 @@ function addTemplate() {
             </div>
         </div>
         <div class="template-body-row">
-            <textarea class="template-body" oninput="autoResizeTextarea(this)"></textarea>
+            <textarea class="template-body" oninput="autoResize(this)"></textarea>
             <div class="button-group">
                 <button onclick="editTemplate(this)">✏️</button>
                 <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
@@ -199,9 +206,9 @@ function addTemplate() {
         </div>
     `;
     container.appendChild(newItem);
-    // 新しく追加した textarea の高さも調整
+    // 新規追加のtextareaも高さ調整しておく
     const textarea = newItem.querySelector('textarea');
-    autoResizeTextarea(textarea);
+    autoResize(textarea);
 }
 
 function editLabel(btn) {
@@ -215,7 +222,7 @@ function editTemplate(btn) {
     const newBody = prompt("テンプレ本文を編集", textarea.value);
     if (newBody !== null) {
         textarea.value = newBody;
-        autoResizeTextarea(textarea); // 編集後も高さ調整
+        autoResize(textarea); // 編集後に高さ調整
     }
 }
 
@@ -251,18 +258,11 @@ function saveStorage() {
     localStorage.setItem('templates', JSON.stringify(items));
 }
 
-// textarea の高さを内容に合わせて自動調整する関数
-function autoResizeTextarea(textarea) {
-    textarea.style.height = 'auto'; // 一旦高さリセット
-    const maxHeight = 200; // 最大高さ(px)を設定（必要に応じて調整）
-    textarea.style.height = Math.min(textarea.scrollHeight, maxHeight) + 'px';
-    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
-}
-
 window.onload = () => {
     const data = JSON.parse(localStorage.getItem('templates') || '[]');
     if (data.length > 0) {
-        document.getElementById('templates').innerHTML = '';
+        const container = document.getElementById('templates');
+        container.innerHTML = '';
         data.forEach(item => {
             const div = document.createElement('div');
             div.className = 'template-item';
@@ -278,21 +278,17 @@ window.onload = () => {
                     </div>
                 </div>
                 <div class="template-body-row">
-                    <textarea class="template-body" oninput="autoResizeTextarea(this)">${item.body}</textarea>
+                    <textarea class="template-body" oninput="autoResize(this)">${item.body}</textarea>
                     <div class="button-group">
                         <button onclick="editTemplate(this)">✏️</button>
                         <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
                     </div>
                 </div>
             `;
-            document.getElementById('templates').appendChild(div);
-            // 読み込み時にも高さ調整
-            autoResizeTextarea(div.querySelector('textarea'));
-        });
-    } else {
-        // 初期状態のtextarea高さ調整
-        document.querySelectorAll('textarea.template-body').forEach(textarea => {
-            autoResizeTextarea(textarea);
+            container.appendChild(div);
+            // 各textareaの高さ調整
+            const textarea = div.querySelector('textarea');
+            autoResize(textarea);
         });
     }
 };
