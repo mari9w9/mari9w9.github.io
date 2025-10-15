@@ -161,7 +161,7 @@
 
 <div id="header-container">
   <button id="reina-title">💗Reina💗</button>
-  <span id="version-label">v1.01</span>
+  <span id="version-label">v1.02</span>
 </div>
 
 <div id="templates">
@@ -278,17 +278,26 @@
   }
 
   // === ローカルストレージ保存 ===
-  function saveStorage() {
-    const items = [];
-    document.querySelectorAll('.template-item').forEach(item => {
-      items.push({
-        label: item.querySelector('.label-text').textContent,
-        body: item.querySelector('.template-body').value,
-        checked: item.querySelector('input[type=checkbox]').checked
-      });
-    });
-    localStorage.setItem('templates', JSON.stringify(items));
-  }
+　function saveStorage() {
+　  const items = [];
+　  document.querySelectorAll('.template-item').forEach(item => {
+　    items.push({
+       label: item.querySelector('.label-text').textContent,
+       body: item.querySelector('.template-body').value,
+       checked: item.querySelector('input[type=checkbox]').checked
+     });
+   });
+   localStorage.setItem('templates', JSON.stringify(items));
+
+   // 通知表示
+   const notice = document.getElementById('copy-notice');
+   notice.textContent = 'アップロードしました';
+   notice.style.display = 'block';
+   setTimeout(() => {
+     notice.style.display = 'none';
+     notice.textContent = 'コピーしました'; // 元に戻す
+   }, 500);
+ }
 
   // === ローカルストレージ削除 ===
   function clearStorage() {
