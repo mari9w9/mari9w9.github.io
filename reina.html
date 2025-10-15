@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Reina Templates</title>
 <style>
 body {
@@ -11,7 +11,7 @@ body {
     padding: 20px;
     text-align: center;
     font-size: 18px;
-    padding-bottom: 100px;
+    padding-bottom: 100px; /* フッターボタンの高さ分余白確保 */
 }
 
 h2 {
@@ -34,7 +34,7 @@ h2 {
     overflow: hidden;
 }
 
-/* ヘッダー */
+/* ヘッダー全体を左右分割 */
 .template-header {
     background-color: #ffe4e1;
     display: flex;
@@ -66,7 +66,7 @@ h2 {
     white-space: nowrap;
 }
 
-/* 本文 */
+/* テンプレート本文 */
 .template-body-row {
     background-color: #fff5f5;
     display: flex;
@@ -80,17 +80,20 @@ h2 {
     font-size: 16px;
     width: 100%;
     min-height: 60px;
-    resize: vertical;
+    resize: none; /* 手動リサイズ禁止 */
     padding: 8px;
+    overflow-y: hidden; /* 自動で高さ調整するのでスクロールバーを消す */
+    box-sizing: border-box;
 }
 
-/* ボタン群 */
+/* ボタン */
 .template-body-row button {
     padding: 8px 12px;
     font-size: 14px;
     margin: 0 4px;
 }
 
+/* コピーと編集ボタン右寄せ */
 .button-group {
     display: flex;
     justify-content: flex-end;
@@ -112,7 +115,7 @@ h2 {
     z-index: 9999;
 }
 
-/* 下部固定ボタン */
+/* 下部固定の操作ボタン */
 .fixed-controls {
     position: fixed;
     bottom: 0;
@@ -126,49 +129,9 @@ h2 {
     gap: 10px;
     z-index: 1000;
 }
-
 .fixed-controls button {
     padding: 10px 16px;
     font-size: 16px;
-}
-
-/* 編集モーダル */
-#edit-modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.6);
-    z-index: 10000;
-    align-items: center;
-    justify-content: center;
-}
-
-#edit-modal .modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 90%;
-    width: 600px;
-    max-height: 90%;
-    display: flex;
-    flex-direction: column;
-}
-
-#edit-modal textarea {
-    flex: 1;
-    width: 100%;
-    height: 300px;
-    font-size: 16px;
-    padding: 10px;
-    resize: vertical;
-}
-
-#edit-modal .modal-buttons {
-    margin-top: 10px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
 }
 </style>
 </head>
@@ -181,7 +144,7 @@ h2 {
         <div class="template-header">
             <div class="template-header-left">
                 <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-                <input type="checkbox">
+                <input type="checkbox" />
                 <span class="label-text">テンプレ:1</span>
             </div>
             <div class="template-header-right">
@@ -189,7 +152,7 @@ h2 {
             </div>
         </div>
         <div class="template-body-row">
-            <textarea class="template-body">Reina様、今日の空気や光を感じてください。</textarea>
+            <textarea class="template-body" oninput="autoResizeTextarea(this)">Reina様、今日の空気や光を感じてください。</textarea>
             <div class="button-group">
                 <button onclick="editTemplate(this)">✏️</button>
                 <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
@@ -200,18 +163,6 @@ h2 {
 
 <div id="copy-notice">コピーしました</div>
 
-<!-- モーダル編集画面 -->
-<div id="edit-modal">
-    <div class="modal-content">
-        <textarea id="edit-modal-textarea"></textarea>
-        <div class="modal-buttons">
-            <button onclick="closeModal()">キャンセル</button>
-            <button onclick="saveModal()">保存</button>
-        </div>
-    </div>
-</div>
-
-<!-- 固定操作ボタン -->
 <div class="fixed-controls">
     <button onclick="setAll(true)">✅セット</button>
     <button onclick="setAll(false)">✅リセット</button>
@@ -232,7 +183,7 @@ function addTemplate() {
         <div class="template-header">
             <div class="template-header-left">
                 <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-                <input type="checkbox">
+                <input type="checkbox" />
                 <span class="label-text"></span>
             </div>
             <div class="template-header-right">
@@ -240,7 +191,7 @@ function addTemplate() {
             </div>
         </div>
         <div class="template-body-row">
-            <textarea class="template-body"></textarea>
+            <textarea class="template-body" oninput="autoResizeTextarea(this)"></textarea>
             <div class="button-group">
                 <button onclick="editTemplate(this)">✏️</button>
                 <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
@@ -248,6 +199,9 @@ function addTemplate() {
         </div>
     `;
     container.appendChild(newItem);
+    // 新しく追加した textarea の高さも調整
+    const textarea = newItem.querySelector('textarea');
+    autoResizeTextarea(textarea);
 }
 
 function editLabel(btn) {
@@ -256,27 +210,13 @@ function editLabel(btn) {
     if (newLabel !== null) label.textContent = newLabel;
 }
 
-let currentEditingTextarea = null;
-
 function editTemplate(btn) {
-    currentEditingTextarea = btn.closest('.template-body-row').querySelector('.template-body');
-    const modal = document.getElementById('edit-modal');
-    const textarea = document.getElementById('edit-modal-textarea');
-    textarea.value = currentEditingTextarea.value;
-    modal.style.display = 'flex';
-}
-
-function closeModal() {
-    document.getElementById('edit-modal').style.display = 'none';
-    currentEditingTextarea = null;
-}
-
-function saveModal() {
-    const textarea = document.getElementById('edit-modal-textarea');
-    if (currentEditingTextarea) {
-        currentEditingTextarea.value = textarea.value;
+    const textarea = btn.closest('.template-body-row').querySelector('.template-body');
+    const newBody = prompt("テンプレ本文を編集", textarea.value);
+    if (newBody !== null) {
+        textarea.value = newBody;
+        autoResizeTextarea(textarea); // 編集後も高さ調整
     }
-    closeModal();
 }
 
 function deleteTemplate(btn) {
@@ -311,6 +251,14 @@ function saveStorage() {
     localStorage.setItem('templates', JSON.stringify(items));
 }
 
+// textarea の高さを内容に合わせて自動調整する関数
+function autoResizeTextarea(textarea) {
+    textarea.style.height = 'auto'; // 一旦高さリセット
+    const maxHeight = 200; // 最大高さ(px)を設定（必要に応じて調整）
+    textarea.style.height = Math.min(textarea.scrollHeight, maxHeight) + 'px';
+    textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
+}
+
 window.onload = () => {
     const data = JSON.parse(localStorage.getItem('templates') || '[]');
     if (data.length > 0) {
@@ -322,7 +270,7 @@ window.onload = () => {
                 <div class="template-header">
                     <div class="template-header-left">
                         <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-                        <input type="checkbox" ${item.checked ? 'checked' : ''}>
+                        <input type="checkbox" ${item.checked ? 'checked' : ''} />
                         <span class="label-text">${item.label}</span>
                     </div>
                     <div class="template-header-right">
@@ -330,7 +278,7 @@ window.onload = () => {
                     </div>
                 </div>
                 <div class="template-body-row">
-                    <textarea class="template-body">${item.body}</textarea>
+                    <textarea class="template-body" oninput="autoResizeTextarea(this)">${item.body}</textarea>
                     <div class="button-group">
                         <button onclick="editTemplate(this)">✏️</button>
                         <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
@@ -338,6 +286,13 @@ window.onload = () => {
                 </div>
             `;
             document.getElementById('templates').appendChild(div);
+            // 読み込み時にも高さ調整
+            autoResizeTextarea(div.querySelector('textarea'));
+        });
+    } else {
+        // 初期状態のtextarea高さ調整
+        document.querySelectorAll('textarea.template-body').forEach(textarea => {
+            autoResizeTextarea(textarea);
         });
     }
 };
