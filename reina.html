@@ -149,7 +149,7 @@
 </head>
 <body>
 
-<h2>💗Reina💗</h2>
+<h2 id="reina-title">💗Reina💗</h2>
 
 <div id="templates">
   <div class="template-item">
@@ -324,6 +324,30 @@
       document.querySelectorAll('textarea.template-body').forEach(autoResize);
     }
   };
+
+  const title = document.getElementById('reina-title');
+  let pressTimer;
+
+　title.addEventListener('mousedown', () => {
+   pressTimer = setTimeout(() => {
+     if (confirm("全テンプレを削除しますか？")) {
+       // DOMのテンプレ削除
+       document.getElementById('templates').innerHTML = '';
+       // ローカルストレージ削除
+       localStorage.removeItem('templates');
+       alert("全テンプレとローカル保存を削除しました。");
+     }
+　  }, 2000); // 2秒長押し
+　});
+
+　title.addEventListener('mouseup', () => {
+　  clearTimeout(pressTimer);
+　});
+
+　title.addEventListener('mouseleave', () => {
+　  clearTimeout(pressTimer);
+　});
+  
 </script>
 </body>
 </html>
