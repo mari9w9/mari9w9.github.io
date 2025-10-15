@@ -13,13 +13,22 @@
     font-size: 18px;
     padding-bottom: 100px;
   }
-  #header-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
+#header-container {
+  display: flex;
+  justify-content: center; /* 中央寄せ */
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  position: relative; /* ラベルを右にずらすため */
+}
+
+#version-label {
+  position: absolute;
+  right: 1cm; /* スマホでも右に約1cm表示 */
+  top: 50%;
+  transform: translateY(-50%); /* ボタンと縦中央揃え */
+  margin-left: 0; /* auto削除 */
+}
   #reina-title {
     font-size: 24px;
     background: none;
@@ -152,7 +161,7 @@
 
 <div id="header-container">
   <button id="reina-title">💗Reina💗</button>
-  <span id="version-label">v1.0</span>
+  <span id="version-label">v1.01</span>
 </div>
 
 <div id="templates">
@@ -184,7 +193,6 @@
   <button onclick="copyAll()">📄コピー</button>
   <button onclick="setAll(false)">✅リセット</button>
   <button onclick="addTemplate()" class="add-btn">テンプレ追加</button>
-  <button onclick="clearStorage()">🗑️ローカル保存削除</button>
 </div>
 <script>
   // === チェックボックス全選択/解除 ===
