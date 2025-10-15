@@ -368,6 +368,9 @@
     } else {
       document.querySelectorAll('textarea.template-body').forEach(autoResize);
     }
+    const versionLabel = document.getElementById("version-label");
+    if (versionLabel) versionLabel.textContent = appVersion;
+    document.title = "Reina Templates " + appVersion; 
   };
 
   // === 💗Reina💗ボタン 長押し2秒で全削除（PC/スマホ対応） ===
