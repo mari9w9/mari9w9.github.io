@@ -11,7 +11,7 @@
     padding: 20px;
     text-align: center;
     font-size: 18px;
-    padding-bottom: 100px; /* フッターボタンの高さ分余白確保 */
+    padding-bottom: 100px;
   }
 
   h2 {
@@ -34,7 +34,6 @@
     overflow: hidden;
   }
 
-  /* ヘッダー全体を左右分割 */
   .template-header {
     background-color: #ffe4e1;
     display: flex;
@@ -64,9 +63,9 @@
   .template-header .label-text {
     font-size: 16px;
     white-space: nowrap;
+    cursor: text;
   }
 
-  /* テンプレート本文 */
   .template-body-row {
     background-color: #fff5f5;
     display: flex;
@@ -89,6 +88,7 @@
     box-sizing: border-box;
     width: 100%;
     margin: 0;
+    cursor: text;
   }
 
   .button-group {
@@ -110,7 +110,7 @@
   }
 
   .fixed-controls .add-btn {
-    margin-left: 30px; /* テンプレ追加ボタンの左に余白 */
+    margin-left: 30px;
   }
   #copy-notice {
     position: fixed;
@@ -196,7 +196,7 @@
         <div class="template-header-left">
           <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
           <input type="checkbox" />
-          <span class="label-text"></span>
+          <span class="label-text">新規テンプレ</span>
         </div>
         <div class="template-header-right">
           <button class="edit-label" onclick="editLabel(this)">🖊️</button>
@@ -211,27 +211,44 @@
       </div>
     `;
     container.appendChild(newItem);
+    autoResize(newItem.querySelector('textarea.template-body'));
   }
 
+  // === タイトル編集（インライン） ===
   function editLabel(btn) {
     const label = btn.closest('.template-header').querySelector('.label-text');
-    const newLabel = prompt("ラベルを編集", label.textContent);
-    if (newLabel !== null) label.textContent = newLabel;
+    label.contentEditable = true;
+    label.focus();
+
+    // Enterキーで保存
+    label.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        label.blur();
+      }
+    });
+
+    // 編集終了で自動保存
+    label.addEventListener('blur', () => {
+      label.contentEditable = false;
+      saveStorage();
+    }, { once: true });
   }
 
+  // === 本文編集（インライン） ===
   function editTemplate(btn) {
     const textarea = btn.closest('.template-item').querySelector('.template-body');
-    const newBody = prompt("テンプレ本文を編集", textarea.value);
-    if (newBody !== null) {
-      textarea.value = newBody;
+    textarea.removeAttribute('readonly');
+    textarea.focus();
+    textarea.addEventListener('blur', () => {
+      textarea.setAttribute('readonly', true);
       autoResize(textarea);
-    }
+      saveStorage();
+    }, { once: true });
   }
 
   function deleteTemplate(btn) {
-    if (confirm("このテンプレを削除しますか？")) {
-      btn.closest('.template-item').remove();
-    }
+    btn.closest('.template-item').remove();
   }
 
   function copyTemplate(btn) {
@@ -242,9 +259,7 @@
 
       const notice = document.getElementById('copy-notice');
       notice.style.display = 'block';
-      setTimeout(() => {
-        notice.style.display = 'none';
-      }, 1000);
+      setTimeout(() => { notice.style.display = 'none'; }, 1000);
     });
   }
 
@@ -258,13 +273,12 @@
       });
     });
     localStorage.setItem('templates', JSON.stringify(items));
-    alert("ローカルストレージに保存しました。");
   }
 
   function copyAll() {
     const fullHtml = document.documentElement.outerHTML;
     navigator.clipboard.writeText(fullHtml)
-      .then(() => alert('✅ ページ全体のHTMLをコピーしました！\nGitHubで上書きして保存できます。'))
+      .then(() => alert('✅ ページ全体のHTMLをコピーしました！'))
       .catch(() => alert('⚠️ コピーに失敗しました。ブラウザの設定を確認してください。'));
   }
 
@@ -272,9 +286,7 @@
     textarea.style.height = 'auto';
     textarea.style.height = textarea.scrollHeight + 'px';
     const minHeight = parseFloat(getComputedStyle(textarea).lineHeight) + 10;
-    if (textarea.scrollHeight < minHeight) {
-      textarea.style.height = minHeight + 'px';
-    }
+    if (textarea.scrollHeight < minHeight) textarea.style.height = minHeight + 'px';
   }
 
   window.onload = () => {
