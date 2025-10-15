@@ -1,277 +1,265 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reina Templates</title>
-<style>
-body {
-    font-family: sans-serif;
-    background-color: #fff0f0;
-    padding: 20px;
-    text-align: center;
-    font-size: 18px;
-    padding-bottom: 100px; /* 下部固定ボタンの分 */
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reina Templates</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #fff0f0;
+      padding: 20px;
+      text-align: center;
+      font-size: 18px;
+      padding-bottom: 100px;
+    }
 
-h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-}
+    h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
 
-#templates {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    #templates {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-.template-item {
-    width: 95%;
-    max-width: 800px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    overflow: hidden;
-}
+    .template-item {
+      width: 95%;
+      max-width: 800px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      overflow: hidden;
+    }
 
-/* テンプレートヘッダー */
-.template-header {
-    background-color: #ffe4e1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    flex-wrap: wrap;
-}
+    .template-header {
+      background-color: #ffe4e1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      flex-wrap: wrap;
+    }
 
-.template-header-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    .template-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-.template-header-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    .template-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
 
-.template-header input[type="checkbox"] {
-    transform: scale(1.5);
-}
+    .template-header input[type="checkbox"] {
+      transform: scale(1.5);
+    }
 
-.template-header .label-text {
-    font-size: 16px;
-    white-space: nowrap;
-}
+    .template-header .label-text {
+      font-size: 16px;
+      white-space: nowrap;
+    }
 
-/* 本文と操作 */
-.template-body-row {
-    background-color: #fff5f5;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    gap: 10px;
-}
+    .template-body-row {
+      background-color: #fff5f5;
+      display: flex;
+      align-items: flex-start;
+      padding: 10px;
+      gap: 10px;
+    }
 
-.template-body {
-    font-size: 16px;
-    width: 100%;
-    resize: none;
-    padding: 8px;
-    overflow: hidden;
-    line-height: 1.4;
-    min-height: 1em;
-    flex-grow: 1;
-}
+    .template-body {
+      font-size: 16px;
+      width: 100%;
+      resize: none;
+      padding: 8px;
+      overflow: hidden;
+      line-height: 1.4;
+      min-height: 1em;
+      flex-grow: 1;
+    }
 
-/* コピー ボタン */
-.copy-template {
-    white-space: nowrap;
-    padding: 8px 12px;
-    font-size: 14px;
-}
+    .copy-template {
+      padding: 8px 12px;
+      font-size: 14px;
+      white-space: nowrap;
+      height: fit-content;
+    }
 
-/* コピー通知 */
-#copy-notice {
-    position: fixed;
-    bottom: 90px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ffcccc;
-    color: #333;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 14px;
-    display: none;
-    z-index: 9999;
-}
+    #copy-notice {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ffcccc;
+      color: #333;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 14px;
+      display: none;
+      z-index: 9999;
+    }
 
-/* 下部固定の操作ボタン */
-.fixed-controls {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #fff0f0;
-    border-top: 1px solid #ccc;
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    z-index: 1000;
-}
-.fixed-controls button {
-    padding: 10px 16px;
-    font-size: 16px;
-}
-</style>
+    .fixed-controls {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #fff0f0;
+      border-top: 1px solid #ccc;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .fixed-controls button {
+      padding: 10px 16px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
 
-<h2>💗Reina💗</h2>
+  <h2>💗Reina💗</h2>
 
-<div id="templates">
+  <div id="templates">
     <div class="template-item">
-        <div class="template-header">
-            <div class="template-header-left">
-                <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-                <input type="checkbox">
-                <span class="label-text">テンプレ:1</span>
-            </div>
-            <div class="template-header-right">
-                <button class="edit-label" onclick="editLabel(this)">🖊️</button>
-                <button onclick="editTemplate(this)">✏️</button>
-            </div>
+      <div class="template-header">
+        <div class="template-header-left">
+          <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
+          <input type="checkbox">
+          <span class="label-text">テンプレ:1</span>
         </div>
-        <div class="template-body-row">
-            <textarea class="template-body" oninput="autoResize(this)">Reina様、今日の空気や光を感じてください。</textarea>
-            <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
+        <div class="template-header-right">
+          <button class="edit-label" onclick="editLabel(this)">🖊️</button>
         </div>
+      </div>
+      <div class="template-body-row">
+        <textarea class="template-body" oninput="autoResize(this)">Reina様、今日の空気や光を感じてください。</textarea>
+        <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
+      </div>
     </div>
-</div>
+  </div>
 
-<div id="copy-notice">コピーしました</div>
+  <div id="copy-notice">コピーしました</div>
 
-<!-- ✅ 下部固定ボタン -->
-<div class="fixed-controls">
+  <div class="fixed-controls">
     <button onclick="setAll(true)">✅セット</button>
     <button onclick="setAll(false)">✅リセット</button>
     <button onclick="saveStorage()">ストレージへ保存</button>
     <button onclick="addTemplate()">テンプレ追加</button>
-</div>
+  </div>
 
-<script>
-function setAll(value) {
-    document.querySelectorAll('#templates input[type=checkbox]').forEach(cb => cb.checked = value);
-}
+  <script>
+    function setAll(value) {
+      document.querySelectorAll('#templates input[type=checkbox]').forEach(cb => cb.checked = value);
+    }
 
-function addTemplate() {
-    const container = document.getElementById('templates');
-    const newItem = document.createElement('div');
-    newItem.className = 'template-item';
-    newItem.innerHTML = `
+    function addTemplate() {
+      const container = document.getElementById('templates');
+      const newItem = document.createElement('div');
+      newItem.className = 'template-item';
+      newItem.innerHTML = `
         <div class="template-header">
-            <div class="template-header-left">
-                <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-                <input type="checkbox">
-                <span class="label-text">テンプレ</span>
-            </div>
-            <div class="template-header-right">
-                <button class="edit-label" onclick="editLabel(this)">🖊️</button>
-                <button onclick="editTemplate(this)">✏️</button>
-            </div>
+          <div class="template-header-left">
+            <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
+            <input type="checkbox">
+            <span class="label-text"></span>
+          </div>
+          <div class="template-header-right">
+            <button class="edit-label" onclick="editLabel(this)">🖊️</button>
+          </div>
         </div>
         <div class="template-body-row">
-            <textarea class="template-body" oninput="autoResize(this)"></textarea>
-            <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
+          <textarea class="template-body" oninput="autoResize(this)"></textarea>
+          <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
         </div>
-    `;
-    container.appendChild(newItem);
-}
-
-function editLabel(btn) {
-    const label = btn.closest('.template-header').querySelector('.label-text');
-    const newLabel = prompt("ラベルを編集", label.textContent);
-    if (newLabel !== null) label.textContent = newLabel;
-}
-
-function editTemplate(btn) {
-    const textarea = btn.closest('.template-item').querySelector('.template-body');
-    const newText = prompt("テンプレ本文を編集", textarea.value);
-    if (newText !== null) {
-        textarea.value = newText;
-        autoResize(textarea);
+      `;
+      container.appendChild(newItem);
     }
-}
 
-function deleteTemplate(btn) {
-    if (confirm("このテンプレを削除しますか？")) {
+    function editLabel(btn) {
+      const label = btn.closest('.template-header').querySelector('.label-text');
+      const newLabel = prompt("ラベルを編集", label.textContent);
+      if (newLabel !== null) label.textContent = newLabel;
+    }
+
+    function deleteTemplate(btn) {
+      if (confirm("このテンプレを削除しますか？")) {
         btn.closest('.template-item').remove();
+      }
     }
-}
 
-function copyTemplate(btn) {
-    const textarea = btn.closest('.template-body-row').querySelector('.template-body');
-    navigator.clipboard.writeText(textarea.value).then(() => {
+    function copyTemplate(btn) {
+      const textarea = btn.closest('.template-body-row').querySelector('.template-body');
+      navigator.clipboard.writeText(textarea.value).then(() => {
         const cb = btn.closest('.template-item').querySelector('input[type=checkbox]');
         if (cb) cb.checked = true;
 
         const notice = document.getElementById('copy-notice');
         notice.style.display = 'block';
         setTimeout(() => {
-            notice.style.display = 'none';
+          notice.style.display = 'none';
         }, 1000);
-    });
-}
+      });
+    }
 
-function saveStorage() {
-    const items = [];
-    document.querySelectorAll('.template-item').forEach(item => {
+    function saveStorage() {
+      const items = [];
+      document.querySelectorAll('.template-item').forEach(item => {
         items.push({
-            label: item.querySelector('.label-text').textContent,
-            body: item.querySelector('.template-body').value,
-            checked: item.querySelector('input[type=checkbox]').checked
+          label: item.querySelector('.label-text').textContent,
+          body: item.querySelector('.template-body').value,
+          checked: item.querySelector('input[type=checkbox]').checked
         });
-    });
-    localStorage.setItem('templates', JSON.stringify(items));
-}
+      });
+      localStorage.setItem('templates', JSON.stringify(items));
+    }
 
-function autoResize(textarea) {
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-}
+    function autoResize(textarea) {
+      textarea.style.height = '0px'; // 縮小も反映
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
 
-window.onload = () => {
-    const data = JSON.parse(localStorage.getItem('templates') || '[]');
-    if (data.length > 0) {
+    window.onload = () => {
+      const data = JSON.parse(localStorage.getItem('templates') || '[]');
+      if (data.length > 0) {
         document.getElementById('templates').innerHTML = '';
         data.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'template-item';
-            div.innerHTML = `
-                <div class="template-header">
-                    <div class="template-header-left">
-                        <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-                        <input type="checkbox" ${item.checked ? 'checked' : ''}>
-                        <span class="label-text">${item.label}</span>
-                    </div>
-                    <div class="template-header-right">
-                        <button class="edit-label" onclick="editLabel(this)">🖊️</button>
-                        <button onclick="editTemplate(this)">✏️</button>
-                    </div>
-                </div>
-                <div class="template-body-row">
-                    <textarea class="template-body" oninput="autoResize(this)">${item.body}</textarea>
-                    <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
-                </div>
-            `;
-            document.getElementById('templates').appendChild(div);
-            autoResize(div.querySelector('.template-body'));
+          const div = document.createElement('div');
+          div.className = 'template-item';
+          div.innerHTML = `
+            <div class="template-header">
+              <div class="template-header-left">
+                <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
+                <input type="checkbox" ${item.checked ? 'checked' : ''}>
+                <span class="label-text">${item.label}</span>
+              </div>
+              <div class="template-header-right">
+                <button class="edit-label" onclick="editLabel(this)">🖊️</button>
+              </div>
+            </div>
+            <div class="template-body-row">
+              <textarea class="template-body" oninput="autoResize(this)">${item.body}</textarea>
+              <button class="copy-template" onclick="copyTemplate(this)">コピー</button>
+            </div>
+          `;
+          document.getElementById('templates').appendChild(div);
+
+          // 初期ロード時もサイズ調整
+          const textarea = div.querySelector('.template-body');
+          autoResize(textarea);
         });
-    }
-};
-</script>
+      }
+    };
+  </script>
 
 </body>
 </html>
