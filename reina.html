@@ -1,21 +1,20 @@
+
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-  const appVersion = "v1.01";  // ← ここだけ変えればOK
+  const appVersion = "v1.02";  // バージョン更新
 
   window.onload = () => {
-    // ページタイトルに反映
     document.title = "Reina Templates " + appVersion;
-    // ボタン横ラベルに反映
     const versionLabel = document.getElementById("version-label");
     if (versionLabel) versionLabel.textContent = appVersion;
   };
 </script>
-<!-- 既存のCSSや他のスクリプトはここから -->
-<title>Reina Templates v1.0</title>
+<title>Reina Templates v1.02</title>
 <style>
   body {
     font-family: sans-serif;
@@ -27,153 +26,149 @@
   }
 #header-container {
   display: flex;
-  justify-content: center; /* 中央寄せ */
+  justify-content: center;
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
-  position: relative; /* ラベルを右にずらすため */
+  position: relative;
 }
-
 #version-label {
   position: absolute;
-  right: 1cm; /* スマホでも右に約1cm表示 */
+  right: 1cm;
   top: 50%;
-  transform: translateY(-50%); /* ボタンと縦中央揃え */
-  margin-left: 0; /* auto削除 */
+  transform: translateY(-50%);
+  margin-left: 0;
+  font-size: 16px;
+  color: #555;
+  user-select: none;
 }
-  #reina-title {
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    user-select: none; /* PC用 */
-  }
-  #version-label {
-    font-size: 16px;
-    color: #555;
-    margin-left: auto;
-    user-select: none;
-  }
-  #templates {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .template-item {
-    width: 95%;
-    max-width: 800px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    overflow: hidden;
-  }
-  .template-header {
-    background-color: #ffe4e1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    flex-wrap: wrap;
-  }
-  .template-header-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .template-header-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: auto;
-  }
-  .template-header input[type="checkbox"] {
-    transform: scale(1.5);
-  }
-  .template-header .label-text {
-    font-size: 16px;
-    white-space: nowrap;
-    cursor: text;
-  }
-  .template-body-row {
-    background-color: #fff5f5;
-    display: flex;
-    align-items: center;
-    padding: 0px;
-    gap: 0px;
-  }
-  textarea.template-body {
-    font-size: 16px;
-    line-height: 1.2;
-    padding: 2px 4px;
-    min-height: calc(1.2em + 4px);
-    max-height: 300px;
-    resize: none;
-    overflow-y: hidden;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-family: inherit;
-    box-sizing: border-box;
-    width: 100%;
-    margin: 0;
-    cursor: text;
-  }
-  .button-group {
-    display: flex;
-    gap: 8px;
-    min-width: 0px;
-    align-items: center;
-  }
-  .button-group button:not(.copy-template) {
-    margin-right: 6px;
-  }
-  .button-group .copy-template {
-    margin-left: auto;
-    padding: 4px 6px;
-    font-size: 14px;
-    width: auto;
-  }
-  .fixed-controls .add-btn {
-    margin-left: 30px;
-  }
-  #copy-notice {
-    position: fixed;
-    bottom: 90px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #ffcccc;
-    color: #333;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 14px;
-    display: none;
-    z-index: 9999;
-  }
-  .fixed-controls {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #fff0f0;
-    border-top: 1px solid #ccc;
-    padding: 2px;
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    z-index: 1000;
-  }
-  .fixed-controls button {
-    padding: 4px 6px;
-    font-size: 12px;
-    cursor: pointer;
-  }
+#reina-title {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  user-select: none;
+}
+#templates {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.template-item {
+  width: 95%;
+  max-width: 800px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.template-header {
+  background-color: #ffe4e1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+.template-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.template-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.template-header input[type="checkbox"] {
+  transform: scale(1.5);
+}
+.template-header .label-text {
+  font-size: 16px;
+  white-space: nowrap;
+  cursor: text;
+}
+.template-body-row {
+  background-color: #fff5f5;
+  display: flex;
+  align-items: center;
+  padding: 0px;
+  gap: 0px;
+}
+textarea.template-body {
+  font-size: 16px;
+  line-height: 1.2;
+  padding: 2px 4px;
+  min-height: calc(1.2em + 4px);
+  max-height: 300px;
+  resize: none;
+  overflow-y: hidden;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  cursor: text;
+}
+.button-group {
+  display: flex;
+  gap: 8px;
+  min-width: 0px;
+  align-items: center;
+}
+.button-group button:not(.copy-template) {
+  margin-right: 6px;
+}
+.button-group .copy-template {
+  margin-left: auto;
+  padding: 4px 6px;
+  font-size: 14px;
+  width: auto;
+}
+.fixed-controls .add-btn {
+  margin-left: 30px;
+}
+#copy-notice {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffcccc;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+  display: none;
+  z-index: 9999;
+}
+.fixed-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff0f0;
+  border-top: 1px solid #ccc;
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  z-index: 1000;
+}
+.fixed-controls button {
+  padding: 4px 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
 
 <div id="header-container">
   <button id="reina-title">💗Reina💗</button>
-  <span id="version-label">v1.0</span>
+  <span id="version-label">v1.02</span>
 </div>
 
 <div id="templates">
@@ -206,6 +201,7 @@
   <button onclick="setAll(false)">✅リセット</button>
   <button onclick="addTemplate()" class="add-btn">テンプレ追加</button>
 </div>
+
 <script>
   // === チェックボックス全選択/解除 ===
   function setAll(value) {
@@ -262,6 +258,9 @@
   // === 本文編集（即保存＆通知0.5秒） ===
   function editTemplate(btn) {
     saveStorage();
+    const textarea = btn.closest('.template-item').querySelector('.template-body');
+    textarea.style.backgroundColor = '#ffffff'; // 保存済みは白
+
     const notice = document.getElementById('copy-notice');
     notice.textContent = '保存しました';
     notice.style.display = 'block';
@@ -275,8 +274,10 @@
   function deleteTemplate(btn) {
     btn.closest('.template-item').remove();
   }
+</script>
 
-  // === コピー ===
+<script>
+  // === コピー個別テンプレ ===
   function copyTemplate(btn) {
     const textarea = btn.closest('.template-item').querySelector('.template-body');
     navigator.clipboard.writeText(textarea.value).then(() => {
@@ -290,79 +291,74 @@
   }
 
   // === ローカルストレージ保存 ===
-　function saveStorage() {
-　  const items = [];
-　  document.querySelectorAll('.template-item').forEach(item => {
-　    items.push({
-       label: item.querySelector('.label-text').textContent,
-       body: item.querySelector('.template-body').value,
-       checked: item.querySelector('input[type=checkbox]').checked
-     });
-   });
-   localStorage.setItem('templates', JSON.stringify(items));
+  function saveStorage() {
+    const items = [];
+    document.querySelectorAll('.template-item').forEach(item => {
+      items.push({
+        label: item.querySelector('.label-text').textContent,
+        body: item.querySelector('.template-body').value,
+        checked: item.querySelector('input[type=checkbox]').checked
+      });
+    });
+    localStorage.setItem('templates', JSON.stringify(items));
 
-   // 通知表示
-   const notice = document.getElementById('copy-notice');
-   notice.textContent = 'アップロードしました';
-   notice.style.display = 'block';
-   setTimeout(() => {
-     notice.style.display = 'none';
-     notice.textContent = 'コピーしました'; // 元に戻す
-   }, 500);
- }
+    // 保存通知
+    const notice = document.getElementById('copy-notice');
+    notice.textContent = 'アップロードしました';
+    notice.style.display = 'block';
+    setTimeout(() => {
+      notice.style.display = 'none';
+      notice.textContent = 'コピーしました';
+    }, 500);
+  }
 
   // === ローカルストレージ削除 ===
   function clearStorage() {
-    if (confirm("ローカルストレージの保存内容を削除しますか？")) {
+    if (confirm("ローカル保存を削除しますか？")) {
       localStorage.removeItem('templates');
-      alert("ローカル保存を削除しました。ページをリロードしてください。");
+      alert("ローカル保存を削除しました。");
     }
   }
 
-  // === ページ全体コピー ===
-  function copyAll() {
-    const fullHtml = document.documentElement.outerHTML;
-    navigator.clipboard.writeText(fullHtml)
-      .then(() => alert('✅ ページ全体のHTMLをコピーしました！'))
-      .catch(() => alert('⚠️ コピーに失敗しました。ブラウザの設定を確認してください。'));
-  }
-  
+  // === ページ全体コピー（タイトル＋本文のみプレーンテキスト） ===
   function copyAll() {
     const container = document.getElementById('templates');
-    // DOMを一時複製
     const clone = container.cloneNode(true);
-    // 複製内のラベルと本文をテキストのみコピー
-    clone.querySelectorAll('.label-text').forEach(el => {
-      el.textContent = el.textContent; // textContentでプレーンテキスト
-    });
-    clone.querySelectorAll('.template-body').forEach(el => {
-      el.textContent = el.value; // textareaの内容をtextContentに
-    });
+    clone.querySelectorAll('.label-text').forEach(el => el.textContent = el.textContent);
+    clone.querySelectorAll('.template-body').forEach(el => el.textContent = el.value);
 
-    // 一時DOMをbodyに追加（コピー用）
     clone.style.position = 'absolute';
     clone.style.left = '-9999px';
     document.body.appendChild(clone);
-    // 選択＆コピー
+
     const range = document.createRange();
     range.selectNodeContents(clone);
     const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
     document.execCommand('copy');
-    // クリーンアップ
+
     sel.removeAllRanges();
     document.body.removeChild(clone);
     alert('✅ テンプレとタイトルはプレーンテキストでコピーしました！');
   }
-  // === textarea自動リサイズ ===
+
+  // === textarea自動リサイズ + 編集中背景色変更 ===
   function autoResize(textarea) {
     textarea.style.height = 'auto';
     textarea.style.height = textarea.scrollHeight + 'px';
     const minHeight = parseFloat(getComputedStyle(textarea).lineHeight) + 10;
     if (textarea.scrollHeight < minHeight) textarea.style.height = minHeight + 'px';
+
+    // 編集中は薄黄色表示
+    textarea.addEventListener('input', () => {
+      textarea.style.backgroundColor = '#fff9c4';
+    });
   }
-    // === ページ読み込み時にローカルストレージから復元 ===
+</script>
+
+<script>
+  // === ページ読み込み時にローカルストレージから復元 ===
   window.onload = () => {
     const data = JSON.parse(localStorage.getItem('templates') || '[]');
     if (data.length > 0) {
@@ -398,7 +394,7 @@
     }
     const versionLabel = document.getElementById("version-label");
     if (versionLabel) versionLabel.textContent = appVersion;
-    document.title = "Reina Templates " + appVersion; 
+    document.title = "Reina Templates " + appVersion;
   };
 
   // === 💗Reina💗ボタン 長押し2秒で全削除（PC/スマホ対応） ===
@@ -414,7 +410,7 @@
 
   // スマホ用
   title.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // 選択防止
+    e.preventDefault();
     pressTimer = setTimeout(() => triggerDeleteAll(), 2000);
   }, { passive: false });
   title.addEventListener('touchend', () => clearTimeout(pressTimer));
@@ -425,12 +421,6 @@
       document.getElementById('templates').innerHTML = '';
       localStorage.removeItem('templates');
       alert("全テンプレとローカル保存を削除しました。");
-    }
-  }
-  function clearLocalStorage() {
-    if (confirm("ローカル保存を削除しますか？")) {
-      localStorage.removeItem('templates');
-      alert("ローカル保存を削除しました。");
     }
   }
 </script>
