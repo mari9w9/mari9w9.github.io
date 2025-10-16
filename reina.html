@@ -321,24 +321,28 @@ textarea.template-body {
     }
   }
 
-  // === ページ全体コピー（タイトル＋本文のみプレーンテキスト） ===
+  // === ページ全体コピー（タイトル＋本文のみプレーンテキスト） ==
   function copyAll() {
     const container = document.getElementById('templates');
     const clone = container.cloneNode(true);
-    clone.querySelectorAll('.label-text').forEach(el => el.textContent = el.textContent);
-    clone.querySelectorAll('.template-body').forEach(el => el.textContent = el.value);
-
+    // 本文を <br> → 改行に変換
+    clone.querySelectorAll('.template-body').forEach(el => {
+      el.textContent = el.value.replace(/<br\s*\/?>/gi, '\n');
+    });
+    // タイトルをプレーンテキスト化
+    clone.querySelectorAll('.label-text').forEach(el => {
+      el.textContent = el.textContent;
+    });
+    // 一時DOMをコピー用にbodyに追加
     clone.style.position = 'absolute';
     clone.style.left = '-9999px';
     document.body.appendChild(clone);
-
     const range = document.createRange();
     range.selectNodeContents(clone);
     const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
     document.execCommand('copy');
-
     sel.removeAllRanges();
     document.body.removeChild(clone);
     alert('✅ テンプレとタイトルはプレーンテキストでコピーしました！');
