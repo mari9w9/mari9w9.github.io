@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-  const appVersion = "v1.00";  // ← ここだけ変えればOK
+  const appVersion = "v1.01";  // ← ここだけ変えればOK
 
   window.onload = () => {
     // ページタイトルに反映
@@ -202,7 +202,6 @@
 
 <div class="fixed-controls">
   <button onclick="saveStorage()">💾アップロード</button>
-  <button onclick="clearLocalStorage()">🗑️ローカル削除</button>
   <button onclick="copyAll()">📄コピー</button>
   <button onclick="setAll(false)">✅リセット</button>
   <button onclick="addTemplate()" class="add-btn">テンプレ追加</button>
@@ -327,7 +326,35 @@
       .then(() => alert('✅ ページ全体のHTMLをコピーしました！'))
       .catch(() => alert('⚠️ コピーに失敗しました。ブラウザの設定を確認してください。'));
   }
+  
+  function copyAll() {
+    const container = document.getElementById('templates');
+    // DOMを一時複製
+    const clone = container.cloneNode(true);
+    // 複製内のラベルと本文をテキストのみコピー
+    clone.querySelectorAll('.label-text').forEach(el => {
+      el.textContent = el.textContent; // textContentでプレーンテキスト
+    });
+    clone.querySelectorAll('.template-body').forEach(el => {
+      el.textContent = el.value; // textareaの内容をtextContentに
+    });
 
+    // 一時DOMをbodyに追加（コピー用）
+    clone.style.position = 'absolute';
+    clone.style.left = '-9999px';
+    document.body.appendChild(clone);
+    // 選択＆コピー
+    const range = document.createRange();
+    range.selectNodeContents(clone);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    document.execCommand('copy');
+    // クリーンアップ
+    sel.removeAllRanges();
+    document.body.removeChild(clone);
+    alert('✅ テンプレとタイトルはプレーンテキストでコピーしました！');
+  }
   // === textarea自動リサイズ ===
   function autoResize(textarea) {
     textarea.style.height = 'auto';
