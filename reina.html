@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-  const appVersion = "v1.05";  // ← ここだけ変えればOK
+  const appVersion = "v1.00";  // ← ここだけ変えればOK
 
   window.onload = () => {
     // ページタイトルに反映
@@ -202,6 +202,7 @@
 
 <div class="fixed-controls">
   <button onclick="saveStorage()">💾アップロード</button>
+  <button onclick="clearLocalStorage()">🗑️ローカル削除</button>
   <button onclick="copyAll()">📄コピー</button>
   <button onclick="setAll(false)">✅リセット</button>
   <button onclick="addTemplate()" class="add-btn">テンプレ追加</button>
@@ -397,6 +398,12 @@
       document.getElementById('templates').innerHTML = '';
       localStorage.removeItem('templates');
       alert("全テンプレとローカル保存を削除しました。");
+    }
+  }
+  function clearLocalStorage() {
+    if (confirm("ローカル保存を削除しますか？")) {
+      localStorage.removeItem('templates');
+      alert("ローカル保存を削除しました。");
     }
   }
 </script>
