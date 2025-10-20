@@ -4,13 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-  const appVersion = "v1.02";  // バージョン更新
-
-  window.onload = () => {
-    document.title = "Reina Templates " + appVersion;
-    const versionLabel = document.getElementById("version-label");
-    if (versionLabel) versionLabel.textContent = appVersion;
-  };
+  const appVersion = "v1.04";  // バージョン情報
+  const storageKey = "LocalData-Common"; // ローカルストレージのキー名
+  aconst appTitle = "Reina Templates 2";
 </script>
 <title>Reina Templates v1.02</title>
 <style>
@@ -165,7 +161,7 @@ textarea.template-body {
 <body>
 
 <div id="header-container">
-  <button id="reina-title">💗Reina💗</button>
+  <button id="reina-title">💗Reina Common💗</button>
   <span id="version-label">v1.02</span>
 </div>
 
@@ -299,7 +295,7 @@ textarea.template-body {
         checked: item.querySelector('input[type=checkbox]').checked
       });
     });
-    localStorage.setItem('templates', JSON.stringify(items));
+    localStorage.setItem(storageKey, JSON.stringify(items));
 
     // 保存通知
     const notice = document.getElementById('copy-notice');
@@ -314,7 +310,7 @@ textarea.template-body {
   // === ローカルストレージ削除 ===
   function clearStorage() {
     if (confirm("ローカル保存を削除しますか？")) {
-      localStorage.removeItem('templates');
+      localStorage.removeItem(storageKey);
       alert("ローカル保存を削除しました。");
     }
   }
@@ -363,7 +359,12 @@ textarea.template-body {
 <script>
   // === ページ読み込み時にローカルストレージから復元 ===
   window.onload = () => {
-    const data = JSON.parse(localStorage.getItem('templates') || '[]');
+    // --- バージョン情報反映 ---
+    document.title = appTitle + " " + appVersion;
+    const versionLabel = document.getElementById("version-label");
+    if (versionLabel) versionLabel.textContent = appVersion;
+    // --- ローカルストレージからの復元 ---
+    const data = JSON.parse(localStorage.getItem(storageKey) || '[]');
     if (data.length > 0) {
       const container = document.getElementById('templates');
       container.innerHTML = '';
@@ -422,7 +423,7 @@ textarea.template-body {
   function triggerDeleteAll() {
     if (confirm("全テンプレとローカル保存を削除しますか？")) {
       document.getElementById('templates').innerHTML = '';
-      localStorage.removeItem('templates');
+      localStorage.removeItem('LocalData-Common');
       alert("全テンプレとローカル保存を削除しました。");
     }
   }
