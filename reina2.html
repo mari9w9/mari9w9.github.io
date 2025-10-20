@@ -423,7 +423,7 @@ textarea.template-body {
   function triggerDeleteAll() {
     if (confirm("全テンプレとローカル保存を削除しますか？")) {
       document.getElementById('templates').innerHTML = '';
-      localStorage.removeItem('LocalData-Common');
+      localStorage.removeItem(storageKey);
       alert("全テンプレとローカル保存を削除しました。");
     }
   }
