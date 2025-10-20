@@ -359,6 +359,7 @@ textarea.template-body {
 <script>
   // === ページ読み込み時にローカルストレージから復元 ===
   window.onload = () => {
+    alert("現在のstorageKeyは: " + storageKey);
     // --- バージョン情報反映 ---
     document.title = appTitle + " " + appVersion;
     const versionLabel = document.getElementById("version-label");
