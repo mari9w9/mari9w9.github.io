@@ -43,10 +43,11 @@
 <div id="copy-notice">コピーしました</div>
 
 <div class="fixed-controls">
-  <button onclick="saveStorage()">💾アップロード</button>
-  <button onclick="copyAll()">📄コピー</button>
-  <button onclick="setAll(false)">✅リセット</button>
-  <button onclick="addTemplate()" class="add-btn">テンプレ追加</button>
+  <button onclick="saveStorage()">💾</button>
+  <button onclick="clearStorage()">🗑️</button>
+  <button onclick="copyAll()">📄</button>
+  <button onclick="setAll(false)">✅</button>
+  <button onclick="addTemplate()" class="add-btn">➕</button>
 </div>
 
 <style>
@@ -172,15 +173,16 @@ textarea.template-body {
   width: 100%;
   background: #fff0f0;
   border-top: 1px solid #ccc;
-  padding: 2px;
+  padding: 4px 0;
   display: flex;
   justify-content: center;
-  gap: 4px;
+  gap: 12px; /* ボタン間隔を広めに */
   z-index: 1000;
 }
+
 .fixed-controls button {
-  padding: 4px 6px;
-  font-size: 12px;
+  padding: 8px 12px; /* タップしやすい大きさ */
+  font-size: 20px;
   cursor: pointer;
 }
 
