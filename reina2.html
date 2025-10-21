@@ -4,9 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-  var appVersion = "v1.04";  // バージョン情報
-  var storageKey = "LocalData-Common"; // ローカルストレージのキー名
-  var appTitle = "Reina Templates 2";
+  const appVersion = "v2.00";  // バージョン更新
+  const STORAGE_KEY = 'ReinaData2';
+</script>
+<script>
+  window.onload = () => {
+    document.title = "Reina Templates " + appVersion;
+    const versionLabel = document.getElementById("version-label");
+    if (versionLabel) versionLabel.textContent = appVersion;
+  };
 </script>
 <title>Reina Templates v1.02</title>
 <style>
@@ -16,7 +22,139 @@
     padding: 20px;
     text-align: center;
     font-size: 18px;
-    padding-bottom: 100px;
+    padding-bottom: 100px; /* フッターボタンの高さ分余白確保 */
+  }
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+
+  #templates {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .template-item {
+    width: 95%;
+    max-width: 800px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  /* ヘッダー全体を左右分割 */
+  .template-header {
+    background-color: #ffe4e1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    flex-wrap: wrap;
+  }
+
+  .template-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .template-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .template-header input[type="checkbox"] {
+    transform: scale(1.5);
+  }
+
+  .template-header .label-text {
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  /* テンプレート本文 */
+  .template-body-row {
+    background-color: #fff5f5;
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    gap: 0px;
+  }
+
+  textarea.template-body {
+    font-size: 16px;
+    line-height: 1.2;
+    padding: 2px 4px;
+    min-height: calc(1.2em + 4px);
+    max-height: 300px;
+    resize: none;
+    overflow-y: hidden;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-family: inherit;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 8px;
+    min-width: 0px;
+    align-items: center;
+  }
+
+  .button-group button:not(.copy-template) {
+    margin-right: 6px;
+  }
+
+  .button-group .copy-template {
+    margin-left: auto;
+    padding: 4px 6px;
+    font-size: 14px;
+    width: auto;
+  }
+
+  .fixed-controls .add-btn {
+    margin-left: 30px; /* テンプレ追加ボタンの左に余白 */
+  }
+  #copy-notice {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffcccc;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    display: none;
+    z-index: 9999;
+  }
+
+  .fixed-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff0f0;
+    border-top: 1px solid #ccc;
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    z-index: 1000;
+  }
+
+  .fixed-controls button {
+    padding: 4px 6px;
+    font-size: 12px;
+    cursor: pointer;
   }
 #header-container {
   display: flex;
@@ -161,8 +299,8 @@ textarea.template-body {
 <body>
 
 <div id="header-container">
-  <button id="reina-title">💗Reina Common💗</button>
-  <span id="version-label">v1.02</span>
+  <button id="reina-title">💗Reina設定💗</button>
+  <span id="version-label">dummy</span>
 </div>
 
 <div id="templates">
@@ -171,15 +309,17 @@ textarea.template-body {
       <div class="template-header-left">
         <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
         <input type="checkbox" />
-        <span class="label-text">テンプレ</span>
+        <span class="label-text">💗</span>
       </div>
       <div class="template-header-right">
+        <button onclick="moveTemplate(this, 'up')">⬆️</button>
+        <button onclick="moveTemplate(this, 'down')">⬇️</button>
         <button class="edit-label" onclick="editLabel(this)">🖊️</button>
         <button onclick="editTemplate(this)">✏️</button>
       </div>
     </div>
     <div class="template-body-row">
-      <textarea class="template-body" oninput="autoResize(this)">Reina様、今日の空気や光を感じてください。</textarea>
+      <textarea class="template-body" oninput="autoResize(this)">「Reina様</textarea>
       <div class="button-group">
         <button class="copy-template" onclick="copyTemplate(this)">📋</button>
       </div>
@@ -212,9 +352,11 @@ textarea.template-body {
         <div class="template-header-left">
           <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
           <input type="checkbox" />
-          <span class="label-text">❤️</span>
+          <span class="label-text">💗</span>
         </div>
         <div class="template-header-right">
+          <button onclick="moveTemplate(this, 'up')">⬆️</button>
+          <button onclick="moveTemplate(this, 'down')">⬇️</button>
           <button class="edit-label" onclick="editLabel(this)">🖊️</button>
           <button onclick="editTemplate(this)">✏️</button>
         </div>
@@ -295,7 +437,7 @@ textarea.template-body {
         checked: item.querySelector('input[type=checkbox]').checked
       });
     });
-    localStorage.setItem(storageKey, JSON.stringify(items));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 
     // 保存通知
     const notice = document.getElementById('copy-notice');
@@ -310,37 +452,18 @@ textarea.template-body {
   // === ローカルストレージ削除 ===
   function clearStorage() {
     if (confirm("ローカル保存を削除しますか？")) {
-      localStorage.removeItem(storageKey);
+      localStorage.removeItem(STORAGE_KEY);
       alert("ローカル保存を削除しました。");
     }
   }
 
   // === ページ全体コピー（タイトル＋本文のみプレーンテキスト） ==
-  function copyAll() {
-    const container = document.getElementById('templates');
-    const clone = container.cloneNode(true);
-    // 本文を <br> → 改行に変換
-    clone.querySelectorAll('.template-body').forEach(el => {
-      el.textContent = el.value.replace(/<br\s*\/?>/gi, '\n');
-    });
-    // タイトルをプレーンテキスト化
-    clone.querySelectorAll('.label-text').forEach(el => {
-      el.textContent = el.textContent;
-    });
-    // 一時DOMをコピー用にbodyに追加
-    clone.style.position = 'absolute';
-    clone.style.left = '-9999px';
-    document.body.appendChild(clone);
-    const range = document.createRange();
-    range.selectNodeContents(clone);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    document.execCommand('copy');
-    sel.removeAllRanges();
-    document.body.removeChild(clone);
-    alert('✅ テンプレとタイトルはプレーンテキストでコピーしました！');
-  }
+function copyAll() {
+  const htmlContent = document.documentElement.outerHTML;
+  navigator.clipboard.writeText(htmlContent)
+    .then(() => alert('✅ ページ全体のHTMLをコピーしました！'))
+    .catch(err => alert('コピーに失敗しました: ' + err));
+}
 
   // === textarea自動リサイズ + 編集中背景色変更 ===
   function autoResize(textarea) {
@@ -359,13 +482,7 @@ textarea.template-body {
 <script>
   // === ページ読み込み時にローカルストレージから復元 ===
   window.onload = () => {
-    alert("現在のstorageKeyは: " + storageKey);
-    // --- バージョン情報反映 ---
-    document.title = appTitle + " " + appVersion;
-    const versionLabel = document.getElementById("version-label");
-    if (versionLabel) versionLabel.textContent = appVersion;
-    // --- ローカルストレージからの復元 ---
-    const data = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     if (data.length > 0) {
       const container = document.getElementById('templates');
       container.innerHTML = '';
@@ -380,6 +497,8 @@ textarea.template-body {
               <span class="label-text">${item.label}</span>
             </div>
             <div class="template-header-right">
+              <button onclick="moveTemplate(this, 'up')">⬆️</button>
+              <button onclick="moveTemplate(this, 'down')">⬇️</button>
               <button class="edit-label" onclick="editLabel(this)">🖊️</button>
               <button onclick="editTemplate(this)">✏️</button>
             </div>
@@ -424,9 +543,19 @@ textarea.template-body {
   function triggerDeleteAll() {
     if (confirm("全テンプレとローカル保存を削除しますか？")) {
       document.getElementById('templates').innerHTML = '';
-      localStorage.removeItem(storageKey);
+      localStorage.removeItem(STORAGE_KEY);
       alert("全テンプレとローカル保存を削除しました。");
     }
+  }
+  // === テンプレの並び替え ===
+  function moveTemplate(btn, direction) {
+    const item = btn.closest('.template-item');
+    if (direction === 'up' && item.previousElementSibling) {
+      item.parentNode.insertBefore(item, item.previousElementSibling);
+    } else if (direction === 'down' && item.nextElementSibling) {
+      item.parentNode.insertBefore(item.nextElementSibling, item);
+    }
+    // saveStorage() は呼ばない
   }
 </script>
 </body>
