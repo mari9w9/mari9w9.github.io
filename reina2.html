@@ -280,29 +280,29 @@ function editLabel(btn) {
   label.addEventListener('blur', () => { label.contentEditable=false; saveStorage(); }, {once:true});
 }
 
-// 本文編集
+// 本文編集（内容は保持、背景色のみリセット）
 function editTemplate(btn) {
   const item = btn.closest('.template-item');
   const textarea = item.querySelector('.template-body');
 
-  // 背景色を元に戻す
-  const original = item.dataset.originalBody || '';
-  textarea.style.backgroundColor = '#fff5f5';
-  textarea.value = original;
+  // 現在の内容をオリジナルとして更新
+  item.dataset.originalBody = textarea.value;
 
-  autoResize(textarea); // 高さを調整
+  // 背景色を差分なしに戻す
+  textarea.style.backgroundColor = '#fff5f5';
+  autoResize(textarea);
 
   // 保存通知
   const notice = document.getElementById('copy-notice');
-  notice.textContent = '保存しました';
+  notice.textContent = '編集内容を基準に更新しました';
   notice.style.display = 'block';
   setTimeout(() => {
     notice.style.display = 'none';
     notice.textContent = 'コピーしました';
   }, 500);
 
-  saveStorage(); // ストレージ更新
 }
+
 
 // コピー
 function copyTemplate(btn) {
@@ -341,6 +341,13 @@ function clearStorage() {
     document.getElementById('templates').innerHTML='';
     localStorage.removeItem(STORAGE_KEY);
   }
+}
+
+// コピー用チェックボックスを全クリア
+function setAll(value) {
+  document.querySelectorAll('.checkbox-copy').forEach(cb => {
+    cb.checked = value;
+  });
 }
 
 // テンプレ追加
