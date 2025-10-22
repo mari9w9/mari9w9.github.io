@@ -5,51 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Reina Templates</title>
 <script>
-  const APPVERSION = "v2.01";  // バージョン更新
+  const APPVERSION = "v2.03";  
   const STORAGE_KEY = 'ReinaData2';
 </script>
-</head>
-<body>
-
-<div id="header-container">
-  <button id="reina-title">💗Reina設定💗</button>
-  <span id="version-label">dummy</span>
-</div>
-
-<div id="templates">
-  <div class="template-item">
-    <div class="template-header">
-      <div class="template-header-left">
-        <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-        <input type="checkbox" />
-        <span class="label-text">💗</span>
-      </div>
-      <div class="template-header-right">
-        <button onclick="moveTemplate(this, 'up')">⬆️</button>
-        <button onclick="moveTemplate(this, 'down')">⬇️</button>
-        <button class="edit-label" onclick="editLabel(this)">🖊️</button>
-        <button onclick="editTemplate(this)">✏️</button>
-      </div>
-    </div>
-    <div class="template-body-row">
-      <textarea class="template-body" oninput="autoResize(this)">「Reina様</textarea>
-      <div class="button-group">
-        <button class="copy-template" onclick="copyTemplate(this)">📋</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="copy-notice">コピーしました</div>
-
-<div class="fixed-controls">
-  <button onclick="saveStorage()">💾</button>
-  <button onclick="clearStorage()">🗑️</button>
-  <button onclick="copyAll()">📄</button>
-  <button onclick="setAll(false)">✅</button>
-  <button onclick="addTemplate()" class="add-btn">➕</button>
-</div>
-
 <style>
 body {
   font-family: sans-serif;
@@ -57,7 +15,7 @@ body {
   padding: 20px;
   text-align: center;
   font-size: 18px;
-  padding-bottom: 100px;
+  padding-bottom: 140px;
 }
 
 #header-container {
@@ -176,19 +134,19 @@ textarea.template-body {
   padding: 4px 0;
   display: flex;
   justify-content: center;
-  gap: 12px; /* ボタン間隔を広めに */
+  gap: 12px;
   z-index: 1000;
 }
 
 .fixed-controls button {
-  padding: 8px 12px; /* タップしやすい大きさ */
+  padding: 8px 12px;
   font-size: 20px;
   cursor: pointer;
 }
 
 #copy-notice {
   position: fixed;
-  bottom: 90px;
+  bottom: 150px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #ffcccc;
@@ -199,28 +157,207 @@ textarea.template-body {
   display: none;
   z-index: 9999;
 }
-</style>
 
+/* 排他的チェックボックス丸型ピンク */
+.exclusive-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ff69b4;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  background-color: #fff;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.exclusive-checkbox:checked {
+  background-color: #ff69b4;
+  border-color: #ff1493;
+}
+</style>
+</head>
+<body>
+<div id="header-container">
+  <button id="reina-title">💗Reina設定💗</button>
+  <span id="version-label">dummy</span>
+</div>
+
+<div id="templates">
+  <div class="template-item">
+    <div class="template-header">
+      <div class="template-header-left">
+        <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
+        <input type="checkbox" class="checkbox-copy" />
+        <input type="checkbox" class="exclusive-checkbox" /> <!-- 排他選択 -->
+        <span class="label-text">💗</span>
+      </div>
+      <div class="template-header-right">
+        <button class="edit-label" onclick="editLabel(this)">🖊️</button>
+        <button onclick="editTemplate(this)">✏️</button>
+      </div>
+    </div>
+    <div class="template-body-row">
+      <textarea class="template-body" oninput="autoResize(this)">「Reina様</textarea>
+      <div class="button-group">
+        <button class="copy-template" onclick="copyTemplate(this)">📋</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="copy-notice">コピーしました</div>
+
+<div class="fixed-controls">
+  <button id="toggle-screen" onclick="toggleBottomScreen()">🔄</button>
+  <div id="bottom-screen-1" class="bottom-screen">
+    <button onclick="saveStorage()">💾</button>
+    <button onclick="moveSelected('up')">⬆️</button>
+    <button onclick="moveSelected('down')">⬇️</button>
+    <button onclick="addTemplate()">➕</button>
+  </div>
+  <div id="bottom-screen-2" class="bottom-screen" style="display:none;">
+    <button onclick="clearStorage()">🗑️</button>
+    <button onclick="copyAll()">📄</button>
+    <button onclick="setAll(false)">✅</button>
+  </div>
+</div>
+
+<style>
+.bottom-screen {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+</style>
 <script>
-// チェックボックス全選択/解除
-function setAll(value) {
-  document.querySelectorAll('#templates input[type=checkbox]').forEach(cb => cb.checked = value);
+// 下段画面切替
+let currentScreen = 1;
+function toggleBottomScreen() {
+  currentScreen = currentScreen === 1 ? 2 : 1;
+  document.getElementById('bottom-screen-1').style.display = currentScreen === 1 ? 'flex' : 'none';
+  document.getElementById('bottom-screen-2').style.display = currentScreen === 2 ? 'flex' : 'none';
 }
 
-// テンプレ作成共通
+// 排他的チェックボックス処理
+document.addEventListener('change', (e) => {
+  if (e.target.classList.contains('exclusive-checkbox')) {
+    if (e.target.checked) {
+      document.querySelectorAll('.exclusive-checkbox').forEach(cb => {
+        if (cb !== e.target) cb.checked = false;
+      });
+    }
+  }
+});
+
+// 選択されたテンプレートを上下移動
+function moveSelected(direction) {
+  const selected = document.querySelector('.exclusive-checkbox:checked');
+  if (!selected) return alert("排他チェックボックスでテンプレを選択してください。");
+
+  const item = selected.closest('.template-item');
+  if (direction === 'up' && item.previousElementSibling) {
+    item.parentNode.insertBefore(item, item.previousElementSibling);
+  } else if (direction === 'down' && item.nextElementSibling) {
+    const next = item.nextElementSibling.nextElementSibling;
+    if(next){
+      item.parentNode.insertBefore(item, next);
+    } else {
+      item.parentNode.appendChild(item); // 最後尾に移動
+    }
+  }
+}
+</script>
+<script>
+
+// ラベル編集
+function editLabel(btn) {
+  const label = btn.closest('.template-header').querySelector('.label-text');
+  label.contentEditable = true;
+  label.focus();
+  label.addEventListener('keydown', e => { if(e.key==='Enter'){e.preventDefault(); label.blur();}}, {once:true});
+  label.addEventListener('blur', () => { label.contentEditable=false; saveStorage(); }, {once:true});
+}
+
+// 本文編集
+function editTemplate(btn) {
+  const item = btn.closest('.template-item');
+  const textarea = item.querySelector('.template-body');
+
+  // 背景色を元に戻す
+  const original = item.dataset.originalBody || '';
+  textarea.style.backgroundColor = '#fff5f5';
+  textarea.value = original;
+
+  autoResize(textarea); // 高さを調整
+
+  // 保存通知
+  const notice = document.getElementById('copy-notice');
+  notice.textContent = '保存しました';
+  notice.style.display = 'block';
+  setTimeout(() => {
+    notice.style.display = 'none';
+    notice.textContent = 'コピーしました';
+  }, 500);
+
+  saveStorage(); // ストレージ更新
+}
+
+// コピー
+function copyTemplate(btn) {
+  const textarea = btn.closest('.template-item').querySelector('.template-body');
+  navigator.clipboard.writeText(textarea.value).then(()=>{
+    const cb = btn.closest('.template-item').querySelector('.checkbox-copy');
+    if(cb) cb.checked = true;
+    const notice = document.getElementById('copy-notice');
+    notice.style.display='block';
+    setTimeout(()=>{ notice.style.display='none'; },500);
+  });
+}
+
+// ページ全コピー
+function copyAll() {
+  navigator.clipboard.writeText(document.documentElement.outerHTML)
+    .then(()=>alert('✅ ページ全体のHTMLをコピーしました！'))
+    .catch(err=>alert('コピー失敗: '+err));
+}
+
+// ストレージ操作
+function saveStorage() {
+  const items = [];
+  document.querySelectorAll('.template-item').forEach(item => {
+    items.push({
+      label: item.querySelector('.label-text').textContent,
+      body: item.querySelector('.template-body').value,
+      checked: item.querySelector('.checkbox-copy').checked
+    });
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+function clearStorage() {
+  if(confirm("全削除してもよろしいですか？")){
+    document.getElementById('templates').innerHTML='';
+    localStorage.removeItem(STORAGE_KEY);
+  }
+}
+
+// テンプレ追加
+// テンプレ作成共通（差分チェック用にoriginalBodyを保持）
 function createTemplateItem({ label = '💗', body = '', checked = false } = {}) {
   const div = document.createElement('div');
   div.className = 'template-item';
+  div.dataset.originalBody = body; // 差分チェック用オリジナル本文
   div.innerHTML = `
     <div class="template-header">
       <div class="template-header-left">
         <button class="delete-template" onclick="deleteTemplate(this)">🗑️</button>
-        <input type="checkbox" ${checked ? 'checked' : ''} />
+        <input type="checkbox" class="checkbox-copy" ${checked ? 'checked' : ''} />
+        <input type="checkbox" class="checkbox-select exclusive-checkbox" /> <!-- 排他選択用 -->
         <span class="label-text">${label}</span>
       </div>
       <div class="template-header-right">
-        <button onclick="moveTemplate(this, 'up')">⬆️</button>
-        <button onclick="moveTemplate(this, 'down')">⬇️</button>
         <button class="edit-label" onclick="editLabel(this)">🖊️</button>
         <button onclick="editTemplate(this)">✏️</button>
       </div>
@@ -236,7 +373,22 @@ function createTemplateItem({ label = '💗', body = '', checked = false } = {})
   return div;
 }
 
-// テンプレ追加
+// textarea自動リサイズ＋差分背景色変更
+function autoResize(textarea) {
+  textarea.style.height = 'auto';
+  textarea.style.height = textarea.scrollHeight + 'px';
+  
+  const item = textarea.closest('.template-item');
+  const original = item.dataset.originalBody || '';
+  
+  if (textarea.value !== original) {
+    textarea.style.backgroundColor = '#fff9c4'; // 差分あり
+  } else {
+    textarea.style.backgroundColor = '#fff5f5'; // 差分なし
+  }
+}
+
+
 function addTemplate() {
   document.getElementById('templates').appendChild(createTemplateItem());
 }
@@ -246,130 +398,14 @@ function deleteTemplate(btn) {
   btn.closest('.template-item').remove();
 }
 
-// 並び替え
-function moveTemplate(btn, direction) {
-  const item = btn.closest('.template-item');
-  if (direction === 'up' && item.previousElementSibling) {
-    item.parentNode.insertBefore(item, item.previousElementSibling);
-  } else if (direction === 'down' && item.nextElementSibling) {
-    item.parentNode.insertBefore(item.nextElementSibling, item);
-  }
-}
-
-// textarea自動リサイズ
-function autoResize(textarea) {
-  textarea.style.height = 'auto';
-  textarea.style.height = textarea.scrollHeight + 'px';
-  const minHeight = parseFloat(getComputedStyle(textarea).lineHeight) + 10;
-  if (textarea.scrollHeight < minHeight) textarea.style.height = minHeight + 'px';
-  textarea.addEventListener('input', () => {
-    textarea.style.backgroundColor = '#fff9c4';
-  });
-}
-
-// タイトル編集
-function editLabel(btn) {
-  const label = btn.closest('.template-header').querySelector('.label-text');
-  label.contentEditable = true;
-  label.focus();
-  label.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      label.blur();
-    }
-  });
-  label.addEventListener('blur', () => {
-    label.contentEditable = false;
-    saveStorage();
-  }, { once: true });
-}
-
-// 本文編集
-function editTemplate(btn) {
-  saveStorage();
-  const textarea = btn.closest('.template-item').querySelector('.template-body');
-  textarea.style.backgroundColor = '#ffffff';
-  const notice = document.getElementById('copy-notice');
-  notice.textContent = '保存しました';
-  notice.style.display = 'block';
-  setTimeout(() => {
-    notice.style.display = 'none';
-    notice.textContent = 'コピーしました';
-  }, 500);
-}
-</script>
-
-<script>
-// 個別コピー
-function copyTemplate(btn) {
-  const textarea = btn.closest('.template-item').querySelector('.template-body');
-  navigator.clipboard.writeText(textarea.value).then(() => {
-    const cb = btn.closest('.template-item').querySelector('input[type=checkbox]');
-    if (cb) cb.checked = true;
-    const notice = document.getElementById('copy-notice');
-    notice.style.display = 'block';
-    setTimeout(() => { notice.style.display = 'none'; }, 500);
-  });
-}
-
-// ページ全体コピー
-function copyAll() {
-  const htmlContent = document.documentElement.outerHTML;
-  navigator.clipboard.writeText(htmlContent)
-    .then(() => alert('✅ ページ全体のHTMLをコピーしました！'))
-    .catch(err => alert('コピーに失敗しました: ' + err));
-}
-
-// ストレージ保存
-function saveStorage() {
-  const items = [];
-  document.querySelectorAll('.template-item').forEach(item => {
-    items.push({
-      label: item.querySelector('.label-text').textContent,
-      body: item.querySelector('.template-body').value,
-      checked: item.querySelector('input[type=checkbox]').checked
-    });
-  });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  const notice = document.getElementById('copy-notice');
-  notice.textContent = 'アップロードしました';
-  notice.style.display = 'block';
-  setTimeout(() => { notice.style.display = 'none'; notice.textContent = 'コピーしました'; }, 500);
-}
-
-// ページロード時に復元
-window.onload = () => {
-  const versionLabel = document.getElementById("version-label");
-  if (versionLabel) versionLabel.textContent = APPVERSION;
-  document.title = "Reina Templates " + APPVERSION;
-
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-  const container = document.getElementById('templates');
-  container.innerHTML = '';
-  if (data.length) {
-    data.forEach(item => container.appendChild(createTemplateItem(item)));
-  }
+// ページロード
+window.onload = ()=>{
+  document.getElementById("version-label").textContent=APPVERSION;
+  const data=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  const container=document.getElementById('templates');
+  container.innerHTML='';
+  if(data.length) data.forEach(item=>container.appendChild(createTemplateItem(item)));
 };
-
-// 💗Reina💗長押し全削除
-const title = document.getElementById('reina-title');
-let pressTimer;
-function triggerDeleteAll() {
-  if (confirm("全テンプレとローカル保存を削除しますか？")) {
-    document.getElementById('templates').innerHTML = '';
-    localStorage.removeItem(STORAGE_KEY);
-    alert("全テンプレとローカル保存を削除しました。");
-  }
-}
-['mousedown','touchstart'].forEach(evt => {
-  title.addEventListener(evt, (e) => {
-    if(evt==='touchstart') e.preventDefault();
-    pressTimer = setTimeout(triggerDeleteAll, 2000);
-  }, {passive:false});
-});
-['mouseup','mouseleave','touchend','touchcancel'].forEach(evt => {
-  title.addEventListener(evt, () => clearTimeout(pressTimer));
-});
 </script>
 </body>
 </html>
