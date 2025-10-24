@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Reina Templates</title>
 <script>
-  const APPVERSION = "v2.03";  
+  const APPVERSION = "v2.04";  
   const STORAGE_KEY = 'ReinaData2';
 </script>
 <style>
@@ -406,12 +406,22 @@ function deleteTemplate(btn) {
 }
 
 // ページロード
-window.onload = ()=>{
-  document.getElementById("version-label").textContent=APPVERSION;
-  const data=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-  const container=document.getElementById('templates');
-  container.innerHTML='';
-  if(data.length) data.forEach(item=>container.appendChild(createTemplateItem(item)));
+window.onload = () => {
+  document.getElementById("version-label").textContent = APPVERSION;
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  const container = document.getElementById('templates');
+  container.innerHTML = '';
+
+  if (data.length) {
+    data.forEach(item => {
+      const div = createTemplateItem(item);
+      container.appendChild(div);
+
+      // DOMに追加した後にリサイズ
+      const textarea = div.querySelector('textarea.template-body');
+      autoResize(textarea);
+    });
+  }
 };
 </script>
 </body>
